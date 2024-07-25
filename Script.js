@@ -166,20 +166,7 @@ The room is full.</div>
   </div>
 </div>
 
-<div class="ui tiny full goodbye modal">
-<div class="ui icon header">
-<i class="red exclamation triangle icon"></i>
-Eleveda👋 - Goodbye👋</div>
-  <div class="content">
-    <p>This project has been created for educational purposes only. The project will end soon. We do not accept encouraging people to take the wrong path. This project was only created to explain how it works.</p>
-  </div>
-  <div class="actions">
-    <div class="ui black cancel button">
-      OK
-    </div>
-  </div>
-  </div>
-</div>
+
 
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
 <div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
@@ -1210,23 +1197,37 @@ btn.addEventListener("click", async function () {
       modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
     }
 
-    let socket = null;
-    if (params.get('proxy') === "true") {
-      if (proxylist) {
+  let socket = null;
+
+if (params.get('proxy') === "true") {
+  if (proxylist) {
+    fetch(`https://${window.location.href.split("/")[2]}/server?check=1&v3=1&room=${params.get('code')}&__cpo=aHR0cHM6Ly9nYXJ0aWMuaW8`)
+      .then(response => response.text())
+      .then(data => {
         const encodedUrl = btoa(`wss:${data.split(":")[1]}/socket.io/?c=${data.split("?c=")[1]}&EIO=3&transport=websocket`);
         socket = new WebSocket(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
-      } else {
-        iziToast.error({
-          position: 'topRight',
-          //theme: 'dark',	
-          title: 'Error',
-          message: 'You Need to Add a Proxy First.',
-        });
-      }
-    } else {
+      })
+      .catch(error => {
+        console.error('Error fetching the server data:', error);
+      });
+  } else {
+    iziToast.error({
+      position: 'topRight',
+      //theme: 'dark',	
+      title: 'Error',
+      message: 'You Need to Add a Proxy First.',
+    });
+  }
+} else {
+  fetch(`https://${window.location.href.split("/")[2]}/server?check=1&v3=1&room=${params.get('code')}&__cpo=aHR0cHM6Ly9nYXJ0aWMuaW8`)
+    .then(response => response.text())
+    .then(data => {
       socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?c=${data.split("?c=")[1]}&EIO=3&transport=websocket`, null);
-    }
-
+    })
+    .catch(error => {
+      console.error('Error fetching the server data:', error);
+    });
+}
     socketList.push(socket);
 
     socket.playerName = modifiedName;
@@ -2030,11 +2031,6 @@ const isDevToolsOpened = () => {
   return widthThreshold || heightThreshold
 }
 
-setInterval(() => {
-  if (isDevToolsOpened()) {
-    location.reload()
-  }
-}, 1000)
 
 
 function ctrlShiftKey(e, keyCode) {
