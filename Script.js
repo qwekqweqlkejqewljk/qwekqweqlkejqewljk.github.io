@@ -353,10 +353,7 @@ The room is full.</div>
 </div>
 `;
 
-$('.ui.goodbye.modal')
-  .modal('setting', 'closable', false)
-  .modal('show')
-  ;
+
 
 $('.profil.bot-image.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.join.dropdown').dropdown('set selected', params.get('lang') || 2);
