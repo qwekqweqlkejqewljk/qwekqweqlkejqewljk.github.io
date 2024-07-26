@@ -1247,7 +1247,7 @@ if (params.get('proxy') === "true") {
         if (url.value == "") {
           socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${modifiedProfil},"idioma":${params.get('lang')}}]`);
         } else {
-          socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${modifiedProfil},"sala":"${params.get('code').slice(-4)}"}]`);
+          socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${modifiedProfil},"platform": 0, "sala":"${params.get('code').slice(-4)}"}]`);
         }
       } else if (event.data === '42[6,4]') {
         if (warningMessage) {
